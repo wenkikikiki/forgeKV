@@ -1,0 +1,20 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'forgekv'
+    static_configs:
+      - targets:
+          - 'host.docker.internal:9301'  # n1 metrics
+          - 'host.docker.internal:9302'  # n2 metrics
+          - 'host.docker.internal:9303'  # n3 metrics
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '.*:(\d+)'
+        target_label: node
+        replacement: 'n$1'

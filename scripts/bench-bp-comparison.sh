@@ -100,7 +100,7 @@ wait_for_leader() {
     local output
     if output=$("$BIN_DIR/forgekvctl" status --json --timeout 2s 2>/dev/null); then
       local leader_id
-      leader_id=$(echo "$output" | grep -o '"leader_id": *"[^"]*"' | head -1 | sed 's/"leader_id": *"//;s/"//')
+      leader_id=$(echo "$output" | grep -o '"leader_id": *"[^"]*"' | head -1 | sed 's/"leader_id": *"//;s/"//' || true)
       if [ -n "$leader_id" ]; then
         echo "Leader elected: $leader_id"
         return 0
